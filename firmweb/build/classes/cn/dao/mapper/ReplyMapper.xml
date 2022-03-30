@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.ReplyMapper">
+  <resultMap id="BaseResultMap" type="cn.entity.Reply">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="nid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="rname" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="fnote" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ftime" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, nid, rname, fnote, ftime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from reply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="getAllReply" resultType="Reply">
+    select * from reply
+    <where>
+      <if test="rname!=null and rname!=''">
+        and rname like '%${rname}%'
+      </if>
+    </where>
+  </select>
+
+  <select id="getNoteReply" resultType="Reply">
+     select n.rname as nname,r.rname,r.fnote,r.ftime from reply r,note n where r.nid=n.id AND n.rname=#{rname}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.entity.Reply">
+    insert into reply (id, nid, rname, 
+      fnote, ftime)
+    values (#{id,jdbcType=INTEGER}, #{nid,jdbcType=INTEGER}, #{rname,jdbcType=VARCHAR}, 
+      #{fnote,jdbcType=VARCHAR}, #{ftime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.entity.Reply">
+    insert into reply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="nid != null">
+        nid,
+      </if>
+      <if test="rname != null">
+        rname,
+      </if>
+      <if test="fnote != null">
+        fnote,
+      </if>
+      <if test="ftime != null">
+        ftime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nid != null">
+        #{nid,jdbcType=INTEGER},
+      </if>
+      <if test="rname != null">
+        #{rname,jdbcType=VARCHAR},
+      </if>
+      <if test="fnote != null">
+        #{fnote,jdbcType=VARCHAR},
+      </if>
+      <if test="ftime != null">
+        #{ftime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.entity.Reply">
+    update reply
+    <set>
+      <if test="nid != null">
+        nid = #{nid,jdbcType=INTEGER},
+      </if>
+      <if test="rname != null">
+        rname = #{rname,jdbcType=VARCHAR},
+      </if>
+      <if test="fnote != null">
+        fnote = #{fnote,jdbcType=VARCHAR},
+      </if>
+      <if test="ftime != null">
+        ftime = #{ftime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.entity.Reply">
+    update reply
+    set nid = #{nid,jdbcType=INTEGER},
+      rname = #{rname,jdbcType=VARCHAR},
+      fnote = #{fnote,jdbcType=VARCHAR},
+      ftime = #{ftime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

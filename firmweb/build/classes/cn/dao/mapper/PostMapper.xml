@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.PostMapper">
+  <resultMap id="BaseResultMap" type="cn.entity.Post">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="post" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="num" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="education" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="salary" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="audit" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="isdel" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="fname" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, post, num, education, salary, audit, isdel, fname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getPostFirm" resultType="Post">
+    select p.*,f.* from firm f,post p WHERE f.firm=p.fname AND p.audit=1
+      <if test="post!=null and post!=''">
+        and p.post like '%${post}%'
+      </if>
+      <if test="firm!=null and firm!=''">
+        and f.firm like '%${firm}%'
+      </if>
+  </select>
+
+  <select id="getPost" resultType="Post">
+    select p.*,f.* from firm f,post p WHERE f.firm=p.fname AND p.audit=1 AND f.firm=#{firm}
+  </select>
+
+
+  <select id="getAllPost" resultType="Post">
+    select * from post
+    <where>
+      <if test="audit!=null and audit!=-1">
+        and audit=#{audit}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from post
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.entity.Post">
+    insert into post (id, post, num, 
+      education, salary, audit, 
+      isdel, fname)
+    values (#{id,jdbcType=INTEGER}, #{post,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, 
+      #{education,jdbcType=VARCHAR}, #{salary,jdbcType=INTEGER}, #{audit,jdbcType=INTEGER}, 
+      #{isdel,jdbcType=INTEGER}, #{fname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.entity.Post">
+    insert into post
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="post != null">
+        post,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="education != null">
+        education,
+      </if>
+      <if test="salary != null">
+        salary,
+      </if>
+      <if test="audit != null">
+        audit,
+      </if>
+      <if test="isdel != null">
+        isdel,
+      </if>
+      <if test="fname != null">
+        fname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="post != null">
+        #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="education != null">
+        #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null">
+        #{salary,jdbcType=INTEGER},
+      </if>
+      <if test="audit != null">
+        #{audit,jdbcType=INTEGER},
+      </if>
+      <if test="isdel != null">
+        #{isdel,jdbcType=INTEGER},
+      </if>
+      <if test="fname != null">
+        #{fname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.entity.Post">
+    update post
+    <set>
+      <if test="post != null">
+        post = #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="education != null">
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null">
+        salary = #{salary,jdbcType=INTEGER},
+      </if>
+      <if test="audit != null">
+        audit = #{audit,jdbcType=INTEGER},
+      </if>
+      <if test="isdel != null">
+        isdel = #{isdel,jdbcType=INTEGER},
+      </if>
+      <if test="fname != null">
+        fname = #{fname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.entity.Post">
+    update post
+    set post = #{post,jdbcType=VARCHAR},
+      num = #{num,jdbcType=INTEGER},
+      education = #{education,jdbcType=VARCHAR},
+      salary = #{salary,jdbcType=INTEGER},
+      audit = #{audit,jdbcType=INTEGER},
+      isdel = #{isdel,jdbcType=INTEGER},
+      fname = #{fname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="shenhe">
+    update post
+    set audit=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
